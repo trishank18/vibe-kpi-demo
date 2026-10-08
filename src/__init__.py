@@ -1,0 +1,1 @@
+"""Customer KPI demo package."""
