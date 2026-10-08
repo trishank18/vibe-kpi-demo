@@ -1,12 +1,25 @@
-# vibe-kpi-demo
+# Applied Analytics KPI Mini Project
 
-Customer city KPI demo using Python, CSV, and SQLite.
+This beginner-friendly project loads customer data from CSV into SQLite and calculates
+city-level customer KPIs.
 
-```bash
-python -m src.etl_load_sqlite
-python -m src.kpi_city
+## Run the project
+
+Run these commands from the project folder after activating `.venv`:
+
+```powershell
+pip install -r requirements.txt
+python src/etl_load_sqlite.py
+python src/kpi_city.py
 pytest -q
 ```
 
-The ETL script loads `data/raw/customers_raw.csv` into `data/db/analytics.db`.
-The KPI script reports customer count, total spend, and average spend per city.
+## Project files
+
+- `data/raw/customers_raw.csv` - Small sample customer dataset.
+- `data/db/analytics.db` - SQLite database created by the ETL script.
+- `src/etl_load_sqlite.py` - Loads and validates the CSV into `customers_raw`.
+- `src/kpi_city.py` - Calculates one city's KPIs with a parameterized SQL query.
+- `tests/test_kpi_city.py` - Tests the normal KPI result and SQL injection protection.
+- `requirements.txt` - Lists pandas and pytest.
+- `.gitignore` - Keeps virtual-environment, cache, environment, and database files out of Git.

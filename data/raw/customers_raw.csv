@@ -1,6 +1,11 @@
-customer_id,name,city,spend
-C001,Asha Rao,Hyderabad,1250.50
-C002,Noah Smith,Hyderabad,980.00
-C003,Mia Chen,Bengaluru,2100.75
-C004,Leo Martin,Bengaluru,750.25
-C005,Emma Jones,Mumbai,1600.00
+customer_id,city,monthly_spend,churned
+1,Mumbai,1250.50,0
+2,Mumbai,980.00,1
+3,Delhi,2100.75,0
+4,Delhi,750.25,0
+5,Bengaluru,1600.00,1
+6,Bengaluru,875.50,0
+7,Hyderabad,1325.00,0
+8,Hyderabad,640.75,1
+9,Mumbai,1890.25,0
+10,Delhi,1100.00,1

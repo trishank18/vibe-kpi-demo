@@ -1,39 +1,43 @@
-"""Calculate customer KPIs grouped by city."""
+"""Calculate customer KPIs for one city."""
 
 from __future__ import annotations
 
-import json
 import sqlite3
 from pathlib import Path
 
 
-def calculate_city_kpis(database_path: Path) -> list[dict[str, float | int | str]]:
-    """Return customer count, total spend, and average spend for each city."""
+def city_kpi(city: str, database_path: Path | None = None) -> dict[str, float | int | str]:
+    """Return customer count, total monthly spend, and average spend for one city."""
+    if database_path is None:
+        root = Path(__file__).resolve().parent.parent
+        database_path = root / "data" / "db" / "analytics.db"
+
     with sqlite3.connect(database_path) as connection:
-        rows = connection.execute(
+        row = connection.execute(
             """
-            SELECT city, COUNT(*) AS customer_count, SUM(spend) AS total_spend,
-                   AVG(spend) AS average_spend
-            FROM customers
-            GROUP BY city
-            ORDER BY city
-            """
-        ).fetchall()
-    return [
-        {
-            "city": city,
-            "customer_count": customer_count,
-            "total_spend": round(total_spend, 2),
-            "average_spend": round(average_spend, 2),
-        }
-        for city, customer_count, total_spend, average_spend in rows
-    ]
+            SELECT COUNT(*) AS customer_count,
+                   COALESCE(SUM(monthly_spend), 0),
+                   COALESCE(AVG(monthly_spend), 0)
+            FROM customers_raw
+            WHERE city = ?
+            """,
+            (city,),
+        ).fetchone()
+
+    customer_count, total_spend, average_spend = row
+    return {
+        "city": city,
+        "customer_count": customer_count,
+        "total_spend": round(total_spend, 2),
+        "average_spend": round(average_spend, 2),
+    }
 
 
 def main() -> None:
     root = Path(__file__).resolve().parent.parent
-    metrics = calculate_city_kpis(root / "data" / "db" / "analytics.db")
-    print(json.dumps(metrics, indent=2))
+    database_path = root / "data" / "db" / "analytics.db"
+    print(city_kpi("Mumbai", database_path))
+    print(city_kpi("Mumbai' OR 1=1 --", database_path))
 
 
 if __name__ == "__main__":
