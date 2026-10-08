@@ -1,1 +1,0 @@
-"""KPI demo source package."""
